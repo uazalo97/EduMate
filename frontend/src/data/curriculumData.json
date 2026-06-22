@@ -1,0 +1,63 @@
+{
+  "Lớp 1": {
+    "Toán học": ["Chương 1: Các số đến 10", "Chương 2: Phép cộng, phép trừ trong phạm vi 10", "Chương 3: Các số trong phạm vi 100", "Chương 4: Phép cộng, phép trừ trong phạm vi 100"],
+    "Tiếng Việt": ["Chủ đề 1: Tôi và các bạn", "Chủ đề 2: Mái ấm gia đình", "Chủ đề 3: Mái trường mến yêu", "Chủ đề 4: Quê hương tươi đẹp"]
+  },
+  "Lớp 2": {
+    "Toán học": ["Chương 1: Ôn tập và bổ sung", "Chương 2: Phép cộng, phép trừ qua 10 trong phạm vi 20", "Chương 3: Phép cộng, phép trừ có nhớ trong phạm vi 100", "Chương 4: Phép nhân, phép chia", "Chương 5: Các số trong phạm vi 1000", "Chương 6: Phép cộng, phép trừ trong phạm vi 1000"],
+    "Tiếng Việt": ["Chủ đề 1: Em lớn lên từng ngày", "Chủ đề 2: Đi học vui sao", "Chủ đề 3: Niềm vui của em", "Chủ đề 4: Mái ấm gia đình"]
+  },
+  "Lớp 3": {
+    "Toán học": ["Chương 1: Ôn tập và bổ sung", "Chương 2: Phép nhân, phép chia trong phạm vi 1000", "Chương 3: Các số đến 10000", "Chương 4: Phép cộng, phép trừ trong phạm vi 10000", "Chương 5: Phép nhân, phép chia trong phạm vi 10000", "Chương 6: Các số đến 100000"],
+    "Tiếng Việt": ["Chủ đề 1: Những trải nghiệm thú vị", "Chủ đề 2: Cổng trường rộng mở", "Chủ đề 3: Mái nhà yêu thương", "Chủ đề 4: Cộng đồng gắn bó"]
+  },
+  "Lớp 4": {
+    "Toán học": ["Chương 1: Số tự nhiên", "Chương 2: Bốn phép tính với số tự nhiên", "Chương 3: Phân số", "Chương 4: Các phép tính với phân số", "Chương 5: Tỉ số - Một số bài toán liên quan đến tỉ số"],
+    "Tiếng Việt": ["Chủ đề 1: Tuổi nhỏ chí lớn", "Chủ đề 2: Trải nghiệm và khám phá", "Chủ đề 3: Niềm vui sáng tạo", "Chủ đề 4: Chắp cánh ước mơ"]
+  },
+  "Lớp 5": {
+    "Toán học": ["Chương 1: Ôn tập và bổ sung về phân số. Số thập phân", "Chương 2: Các phép tính với số thập phân", "Chương 3: Hình học", "Chương 4: Số đo thời gian. Toán chuyển động đều"],
+    "Tiếng Việt": ["Chủ đề 1: Thế giới tuổi thơ", "Chủ đề 2: Khám phá thế giới", "Chủ đề 3: Con người và thiên nhiên", "Chủ đề 4: Quê hương đất nước"]
+  },
+  "Lớp 6": {
+    "Toán học": ["Chương 1: Tập hợp các số tự nhiên", "Chương 2: Tính chia hết trong tập hợp các số tự nhiên", "Chương 3: Số nguyên", "Chương 4: Một số hình phẳng trong thực tiễn", "Chương 5: Tính đối xứng của hình phẳng trong thế giới tự nhiên", "Chương 6: Phân số", "Chương 7: Số thập phân", "Chương 8: Những hình học cơ bản", "Chương 9: Dữ liệu và xác suất thực nghiệm"],
+    "Ngữ văn": ["Bài 1: Tôi và các bạn", "Bài 2: Gõ cửa trái tim", "Bài 3: Yêu thương và chia sẻ", "Bài 4: Quê hương yêu dấu", "Bài 5: Những nẻo đường xứ sở", "Bài 6: Chuyện kể về những người anh hùng", "Bài 7: Thế giới cổ tích", "Bài 8: Khác biệt và gần gũi", "Bài 9: Trái Đất - ngôi nhà chung"],
+    "Khoa học tự nhiên": ["Chương 1: Mở đầu về khoa học tự nhiên", "Chương 2: Chất quanh ta", "Chương 3: Một số vật liệu, nhiên liệu, nguyên liệu, lương thực, thực phẩm", "Chương 4: Hỗn hợp. Tách chất ra khỏi hỗn hợp", "Chương 5: Tế bào", "Chương 6: Từ tế bào đến cơ thể", "Chương 7: Đa dạng thế giới sống", "Chương 8: Lực trong đời sống", "Chương 9: Năng lượng", "Chương 10: Trái Đất và bầu trời"]
+  },
+  "Lớp 7": {
+    "Toán học": ["Chương 1: Số hữu tỉ", "Chương 2: Số thực", "Chương 3: Góc và đường thẳng song song", "Chương 4: Tam giác bằng nhau", "Chương 5: Thu thập và biểu diễn dữ liệu", "Chương 6: Tỉ lệ thức và đại lượng tỉ lệ", "Chương 7: Biểu thức đại số và đa thức một biến", "Chương 8: Làm quen với biến cố và xác suất của biến cố", "Chương 9: Quan hệ giữa các yếu tố trong một tam giác", "Chương 10: Một số hình khối trong thực tiễn"],
+    "Ngữ văn": ["Bài 1: Bầu trời tuổi thơ", "Bài 2: Khúc nhạc tâm hồn", "Bài 3: Cội nguồn yêu thương", "Bài 4: Giai điệu đất nước", "Bài 5: Màu sắc trăm miền", "Bài 6: Bài học cuộc sống", "Bài 7: Thế giới viễn tưởng", "Bài 8: Trải nghiệm để trưởng thành", "Bài 9: Hòa điệu với tự nhiên"],
+    "Khoa học tự nhiên": ["Chương 1: Nguyên tử. Sơ lược về bảng tuần hoàn các nguyên tố hóa học", "Chương 2: Phân tử. Liên kết hóa học", "Chương 3: Tốc độ, âm thanh, ánh sáng", "Chương 4: Từ trường", "Chương 5: Trao đổi chất và chuyển hóa năng lượng ở sinh vật", "Chương 6: Cảm ứng ở sinh vật", "Chương 7: Sinh trưởng và phát triển ở sinh vật", "Chương 8: Sinh sản ở sinh vật"]
+  },
+  "Lớp 8": {
+    "Toán học": ["Chương 1: Đa thức", "Chương 2: Hằng đẳng thức đáng nhớ và ứng dụng", "Chương 3: Tứ giác", "Chương 4: Định lí Thalès", "Chương 5: Dữ liệu và biểu đồ", "Chương 6: Phân thức đại số", "Chương 7: Phương trình bậc nhất và hàm số bậc nhất", "Chương 8: Mở đầu về tính xác suất của biến cố", "Chương 9: Tam giác đồng dạng", "Chương 10: Một số hình khối trong thực tiễn"],
+    "Ngữ văn": ["Bài 1: Câu chuyện của lịch sử", "Bài 2: Vẻ đẹp cổ điển", "Bài 3: Lời sông núi", "Bài 4: Tiếng cười trào phúng trong thơ", "Bài 5: Những câu chuyện hài", "Bài 6: Chân dung cuộc sống", "Bài 7: Tin yêu và ước vọng", "Bài 8: Nhà văn và trang vách", "Bài 9: Hôm nay và ngày mai"],
+    "Khoa học tự nhiên": ["Chương 1: Phản ứng hóa học", "Chương 2: Một số hợp chất vô cơ", "Chương 3: Khối lượng riêng và áp suất", "Chương 4: Tác dụng làm quay của lực", "Chương 5: Điện", "Chương 6: Nhiệt", "Chương 7: Sinh học cơ thể người", "Chương 8: Sinh thái học và môi trường"]
+  },
+  "Lớp 9": {
+    "Toán học": ["Chương 1: Phương trình và hệ phương trình bậc nhất", "Chương 2: Phương trình bậc hai một ẩn", "Chương 3: Căn bậc hai và căn bậc ba", "Chương 4: Hệ thức lượng trong tam giác vuông", "Chương 5: Đường tròn", "Chương 6: Hàm số y = ax^2", "Chương 7: Tần số và tần số tương đối", "Chương 8: Xác suất của biến cố", "Chương 9: Hình học không gian"],
+    "Ngữ văn": ["Bài 1: Thương nhớ quê hương", "Bài 2: Tiếng nói của lương tri", "Bài 3: Thông điệp từ thiên nhiên", "Bài 4: Khúc tráng ca", "Bài 5: Những kiếp người", "Bài 6: Giải mã thế giới", "Bài 7: Hạt giống tâm hồn", "Bài 8: Chuyện về những người trẻ", "Bài 9: Khát vọng hòa bình"],
+    "Khoa học tự nhiên": ["Chương 1: Khúc xạ ánh sáng", "Chương 2: Năng lượng và sự chuyển hóa năng lượng", "Chương 3: Điện từ", "Chương 4: Sự phát sinh và phát triển sự sống trên Trái Đất", "Chương 5: Di truyền học", "Chương 6: Tiến hóa", "Chương 7: Kim loại", "Chương 8: Hợp chất hữu cơ"]
+  },
+  "Lớp 10": {
+    "Toán học": ["Chương 1: Mệnh đề và tập hợp", "Chương 2: Bất phương trình và hệ bất phương trình bậc nhất hai ẩn", "Chương 3: Hệ thức lượng trong tam giác", "Chương 4: Vectơ", "Chương 5: Các số đặc trưng của mẫu số liệu không ghép nhóm", "Chương 6: Hàm số, đồ thị và ứng dụng", "Chương 7: Phương pháp tọa độ trong mặt phẳng", "Chương 8: Đại số tổ hợp", "Chương 9: Tính xác suất theo định nghĩa cổ điển"],
+    "Ngữ văn": ["Bài 1: Sức hấp dẫn của truyện kể", "Bài 2: Vẻ đẹp của thơ ca", "Bài 3: Nghệ thuật thuyết phục trong văn nghị luận", "Bài 4: Sức sống của sử thi", "Bài 5: Tích trò sân khấu dân gian", "Bài 6: Nguyễn Trãi - Dành còn để trợ dân này", "Bài 7: Quyền năng của người kể chuyện", "Bài 8: Thế giới đa dạng của thông tin", "Bài 9: Hành trang cuộc sống"],
+    "Vật lý": ["Chương 1: Mở đầu", "Chương 2: Động học", "Chương 3: Động lực học", "Chương 4: Năng lượng, công, công suất", "Chương 5: Động lượng", "Chương 6: Chuyển động tròn đều", "Chương 7: Biến dạng của vật rắn. Áp suất chất lỏng"],
+    "Hóa học": ["Chương 1: Cấu tạo nguyên tử", "Chương 2: Bảng tuần hoàn các nguyên tố hóa học", "Chương 3: Liên kết hóa học", "Chương 4: Phản ứng oxi hóa - khử", "Chương 5: Năng lượng hóa học", "Chương 6: Tốc độ phản ứng", "Chương 7: Nguyên tố nhóm VIIA"],
+    "Sinh học": ["Chương 1: Giới thiệu chung về sinh giới", "Chương 2: Thành phần hóa học của tế bào", "Chương 3: Cấu trúc tế bào", "Chương 4: Chuyển hóa năng lượng trong tế bào", "Chương 5: Chu kì tế bào và phân bào", "Chương 6: Sinh học vi sinh vật", "Chương 7: Virus và bệnh truyền nhiễm"]
+  },
+  "Lớp 11": {
+    "Toán học": ["Chương 1: Hàm số lượng giác và phương trình lượng giác", "Chương 2: Dãy số. Cấp số cộng và cấp số nhân", "Chương 3: Các số đặc trưng đo xu thế trung tâm của mẫu số liệu ghép nhóm", "Chương 4: Quan hệ song song trong không gian", "Chương 5: Giới hạn. Hàm số liên tục", "Chương 6: Hàm số mũ và hàm số lôgarit", "Chương 7: Quan hệ vuông góc trong không gian", "Chương 8: Các quy tắc tính xác suất", "Chương 9: Đạo hàm"],
+    "Ngữ văn": ["Bài 1: Câu chuyện và điểm nhìn trong truyện kể", "Bài 2: Cấu tứ và hình ảnh trong thơ trữ tình", "Bài 3: Cấu trúc của văn bản nghị luận", "Bài 4: Tự sự trong truyện thơ dân gian và trong thơ trữ tình", "Bài 5: Nhân vật và xung đột trong bi kịch", "Bài 6: Nguyễn Du - Những điều trông thấy mà đau đớn lòng", "Bài 7: Ghi chép và tưởng tượng trong kí", "Bài 8: Cấu trúc và sự phát triển của văn bản thông tin", "Bài 9: Lựa chọn và hành động"],
+    "Vật lý": ["Chương 1: Dao động", "Chương 2: Sóng", "Chương 3: Điện trường", "Chương 4: Dòng điện không đổi"],
+    "Hóa học": ["Chương 1: Cân bằng hóa học", "Chương 2: Nitrogen và Sulfur", "Chương 3: Đại cương về hóa học hữu cơ", "Chương 4: Hydrocarbon", "Chương 5: Dẫn xuất halogen - Alcohol - Phenol", "Chương 6: Hợp chất carbonyl - Carboxylic acid"],
+    "Sinh học": ["Chương 1: Trao đổi chất và chuyển hóa năng lượng ở sinh vật", "Chương 2: Cảm ứng ở sinh vật", "Chương 3: Sinh trưởng và phát triển ở sinh vật", "Chương 4: Sinh sản ở sinh vật", "Chương 5: Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật"]
+  },
+  "Lớp 12": {
+    "Toán học": ["Chương 1: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số", "Chương 2: Vectơ và hệ tọa độ trong không gian", "Chương 3: Các số đặc trưng đo mức độ phân tán cho mẫu số liệu ghép nhóm", "Chương 4: Nguyên hàm và tích phân", "Chương 5: Phương trình mặt phẳng và phương trình đường thẳng trong không gian", "Chương 6: Xác suất có điều kiện"],
+    "Ngữ văn": ["Bài 1: Khả năng lớn lao của tiểu thuyết", "Bài 2: Những ô cửa nhìn ra cuộc sống", "Bài 3: Tiếng cười xót xa và hi vọng", "Bài 4: Nữ quyền và sự giải phóng", "Bài 5: Tấm gương phản chiếu thời đại", "Bài 6: Hồ Chí Minh - Dân tộc và nhân loại", "Bài 7: Những vấn đề toàn cầu", "Bài 8: Trái tim và lí trí", "Bài 9: Nghệ thuật và cuộc sống"],
+    "Vật lý": ["Chương 1: Vật lí nhiệt", "Chương 2: Khí lí tưởng", "Chương 3: Từ trường", "Chương 4: Vật lí lượng tử", "Chương 5: Vật lí hạt nhân"],
+    "Hóa học": ["Chương 1: Ester - Lipid", "Chương 2: Carbohydrate", "Chương 3: Hợp chất chứa nitrogen", "Chương 4: Polymer", "Chương 5: Pin điện và điện phân", "Chương 6: Đại cương về kim loại", "Chương 7: Nguyên tố nhóm IA và IIA", "Chương 8: Sơ lược về kim loại chuyển tiếp dãy thứ nhất và phức chất"],
+    "Sinh học": ["Chương 1: Cơ sở phân tử của sự di truyền", "Chương 2: Nhiễm sắc thể và quy luật di truyền", "Chương 3: Di truyền quần thể và di truyền người", "Chương 4: Ứng dụng di truyền học", "Chương 5: Bằng chứng và cơ chế tiến hóa", "Chương 6: Sự phát sinh và phát triển sự sống trên Trái Đất", "Chương 7: Cá thể và quần thể sinh vật", "Chương 8: Quần xã sinh vật và hệ sinh thái", "Chương 9: Sinh thái học ứng dụng"]
+  }
+}
