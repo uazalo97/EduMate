@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   frontend:
-    image: node:18-alpine
+    image: node:20-alpine
     container_name: edumate_frontend_dev
     working_dir: /app
     volumes:
