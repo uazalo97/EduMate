@@ -7,3 +7,4 @@ openai
 pydantic
 python-dotenv
 passlib[bcrypt]
+google-auth
