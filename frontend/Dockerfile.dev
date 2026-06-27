@@ -1,0 +1,11 @@
+FROM node:20-alpine
+WORKDIR /app
+
+# Copy package files and install dependencies
+# We do this before copying the rest of the source code to cache the dependencies layer
+COPY package*.json ./
+RUN npm install
+
+# The source code will be bind-mounted via docker-compose.dev.yml
+# but we still define the default command here
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
