@@ -82,6 +82,47 @@ npm run dev
 ```
 🎉 Sau vài giây, Terminal sẽ hiển thị một đường dẫn Localhost (thường là **http://localhost:5173**). Hãy nhấn `Ctrl + Click` vào đường link đó để mở ứng dụng EduMate trên trình duyệt web của bạn.
 
+## 🐳 Hướng dẫn chạy bằng Docker (Khuyên dùng)
+
+Cách dễ nhất và chuẩn mực nhất để chạy dự án là sử dụng **Docker**. Bạn không cần cài đặt Node.js hay Python thủ công nữa.
+
+### Bước 1: Tạo file cấu hình môi trường (.env)
+1. Copy file `.env.example` thành file mới tên là `.env`.
+2. Mở file `.env` và điền khóa bí mật `OPENAI_API_KEY` cũng như thay đổi thông tin Database nếu cần:
+```env
+POSTGRES_USER=edumate
+POSTGRES_PASSWORD=edumate_super_secret_pass
+POSTGRES_DB=edumate_db
+OPENAI_API_KEY=sk-...
+```
+
+### Bước 2: Chọn môi trường để chạy
+
+#### Môi trường Phát triển (Development - Hot Reload)
+Dành cho lập trình viên. Code thay đổi sẽ được cập nhật ngay lập tức lên trình duyệt.
+```bash
+docker compose -f docker-compose.dev.yml up -d --build
+```
+- Frontend: `http://localhost:5173`
+- Backend API: `http://localhost:8000`
+- PostgreSQL: `localhost:5432`
+
+#### Môi trường Triển khai (Production)
+Dành cho chạy thực tế trên máy chủ. Tối ưu hóa hiệu năng, sử dụng Nginx.
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+```
+- Frontend: `http://localhost:80`
+- Backend API: `http://localhost:8000`
+
+### Dừng hệ thống
+Để tắt các server Docker đang chạy:
+```bash
+docker compose -f docker-compose.dev.yml down
+# hoặc
+docker compose -f docker-compose.prod.yml down
+```
+
 ---
 
 ## 📚 Tóm tắt kiến trúc Backend cho đội ngũ kỹ thuật

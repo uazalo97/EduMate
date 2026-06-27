@@ -2,6 +2,7 @@ import os
 import mammoth
 import logging
 from docx import Document
+from services.ai_service import edit_paragraph_content
 
 logger = logging.getLogger(__name__)
 
@@ -112,5 +113,59 @@ def process_template_nodes(file_path: str) -> tuple[str, dict]:
     elements = extract_document_elements(docx_path)
     return docx_path, elements
 
-
-
+def edit_document_text_via_ai(docx_path: str, selected_text: str, paragraph_text: str, prompt: str) -> None:
+    """
+    Duyệt file Word, tìm đoạn văn có nội dung khớp với paragraph_text,
+    gọi AI để sửa và ghi đè lại file.
+    """
+    logger.info(f"[document_service] Tìm và sửa đoạn văn. File: {docx_path}")
+    doc = Document(docx_path)
+    
+    sel_clean = "".join(selected_text.split())
+    para_clean = "".join(paragraph_text.split())
+    
+    if not sel_clean:
+        raise Exception("Nội dung bôi đen trống.")
+        
+    candidates = []
+    
+    def extract_candidates(paragraphs):
+        for p in paragraphs:
+            if p.text.strip():
+                p_clean = "".join(p.text.split())
+                if sel_clean in p_clean:
+                    candidates.append(p)
+                    
+    extract_candidates(doc.paragraphs)
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                extract_candidates(cell.paragraphs)
+                
+    target_p = None
+    if len(candidates) == 1:
+        target_p = candidates[0]
+    elif len(candidates) > 1:
+        # Nếu có nhiều, chọn cái khớp paragraph_text nhất
+        for p in candidates:
+            p_clean = "".join(p.text.split())
+            if p_clean == para_clean or p_clean in para_clean or para_clean in p_clean:
+                target_p = p
+                break
+        # Nếu vẫn không tìm được, lấy cái đầu tiên
+        if not target_p:
+            target_p = candidates[0]
+            
+    if target_p:
+        logger.info("[document_service] Đã tìm thấy đoạn văn cần sửa.")
+        new_text = edit_paragraph_content(target_p.text, selected_text, prompt)
+        bold = target_p.runs[0].bold if target_p.runs else None
+        target_p.clear()
+        run = target_p.add_run(new_text)
+        if bold:
+            run.bold = True
+        doc.save(docx_path)
+        logger.info(f"[document_service] Đã lưu file sau khi sửa: {docx_path}")
+    else:
+        logger.warning("[document_service] Không tìm thấy đoạn văn khớp với nội dung đã bôi đen.")
+        raise Exception("Không tìm thấy đoạn văn tương ứng trong file Word.")

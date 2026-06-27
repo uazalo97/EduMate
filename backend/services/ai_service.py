@@ -37,6 +37,15 @@ def generate_lesson_plan_nodes(prompt: str, document_elements: dict, meta_data: 
     - Người dùng có cung cấp sẵn các thông tin hành chính sau:
       {json.dumps(meta_data, ensure_ascii=False)}
     - Hãy tìm các đoạn văn chứa thẻ như {{{{ ten_truong }}}}, {{{{ ten_bai_day }}}}... và thay thế bằng dữ liệu tương ứng ở trên.
+
+    PHẦN 3: XỬ LÝ CÔNG THỨC TOÁN HỌC VÀ HÓA HỌC
+    - TUYỆT ĐỐI KHÔNG sử dụng cú pháp mã hóa LaTeX (như \\frac{{1}}{{2}}, x^2, \sqrt{{x}}) vì hệ thống xuất file Word chưa hỗ trợ dịch mã LaTeX.
+    - BẮT BUỘC sử dụng các ký tự Unicode thuần túy để biểu diễn công thức. Ví dụ: viết x², ½, ¾, ±, √x, H₂O, CO₂.
+    - Với phân số phức tạp, hãy dùng dấu gạch chéo, ví dụ: (x+1)/(x-2).
+    
+    PHẦN 4: HÌNH THỨC TRÌNH BÀY (QUAN TRỌNG)
+    - TUYỆT ĐỐI KHÔNG SỬ DỤNG định dạng Bảng của Markdown (ví dụ: | Cột 1 | Cột 2 |). Vì hệ thống xuất Word sẽ không tự động chuyển mã Markdown thành bảng thật mà chỉ hiện ra text thô.
+    - Bắt buộc trình bày nội dung dưới dạng các đoạn văn (Paragraphs) hoặc danh sách gạch đầu dòng (Bullet points).
     
     ĐỊNH DẠNG ĐẦU RA BẮT BUỘC (JSON):
     - Key: Là mã ID của đoạn văn (ví dụ: "p_1", "t_0_1_2").
@@ -82,4 +91,60 @@ def generate_lesson_plan_nodes(prompt: str, document_elements: dict, meta_data: 
         raise Exception("Failed to decode JSON from OpenAI response.")
     except Exception as e:
         logger.error(f"[ai_service] Lỗi trong quá trình gọi OpenAI API: {str(e)}")
+        raise e
+
+def edit_paragraph_content(paragraph_text: str, selected_text: str, prompt: str) -> str:
+    """
+    Sử dụng OpenAI để sửa lại một đoạn văn bản (paragraph) dựa trên văn bản bôi đen và prompt của người dùng.
+    """
+    logger.info(f"[ai_service] Gọi LLM để sửa đoạn văn. Selected: '{selected_text}', Prompt: '{prompt}'")
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise Exception("OPENAI_API_KEY is not set.")
+        
+    client = OpenAI(api_key=api_key)
+    
+    system_prompt = f"""
+    Bạn là một trợ lý AI giúp người dùng chỉnh sửa văn bản trong Giáo án (Kế hoạch bài dạy).
+    
+    Người dùng sẽ cung cấp:
+    1. Toàn bộ đoạn văn gốc (Paragraph Text)
+    2. Một phần chữ trong đoạn văn đó mà họ đang bôi đen (Selected Text)
+    3. Yêu cầu chỉnh sửa của họ đối với phần bôi đen (User Prompt)
+    
+    NHIỆM VỤ CỦA BẠN:
+    Hãy viết lại TOÀN BỘ đoạn văn gốc để phản ánh thay đổi mà người dùng muốn áp dụng lên phần được bôi đen.
+    - Trả về ĐÚNG 1 ĐOẠN VĂN đã được sửa.
+    - KHÔNG thêm bất kỳ câu giải thích nào như "Đây là đoạn văn đã sửa:".
+    - KHÔNG sử dụng ký hiệu LaTeX (như \\frac{{1}}{{2}}), BẮT BUỘC dùng Unicode (như ½, x²).
+    """
+    
+    user_content = f"""
+    Đoạn văn gốc:
+    {paragraph_text}
+    
+    Phần đang bôi đen (cần sửa):
+    {selected_text}
+    
+    Yêu cầu sửa:
+    {prompt}
+    """
+    
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_content}
+            ],
+            temperature=0.7,
+            max_tokens=2000
+        )
+        
+        content = response.choices[0].message.content.strip()
+        logger.info(f"[ai_service] Trả về đoạn văn đã sửa: {content}")
+        return content
+        
+    except Exception as e:
+        logger.error(f"[ai_service] Lỗi sửa văn bản: {str(e)}")
         raise e

@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { Routes, Route, NavLink, Outlet, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, NavLink, Outlet, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useAuth } from './contexts/AuthContext';
+import LoginPage from './components/LoginPage';
+import PrivateRoute from './components/PrivateRoute';
 import { Upload, FileText, Sparkles, Download, CheckCircle, Loader2, BookOpen, User, Sun, Moon, Settings, Globe, HelpCircle, ArrowUpCircle, Info, LogOut, Presentation, ClipboardList, PlayCircle, ChevronDown, Check, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import './index.css';
 import './document-preview.css';
@@ -103,6 +106,12 @@ function LessonPlanTool() {
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
   const previewRef = useRef(null);
+  
+  // AI Inline Edit State
+  const [selectionData, setSelectionData] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editPrompt, setEditPrompt] = useState('');
+  const [isEditingDocument, setIsEditingDocument] = useState(false);
 
   useEffect(() => {
     if (resultBlob && previewRef.current) {
@@ -120,6 +129,71 @@ function LessonPlanTool() {
       }).catch(err => console.error("docx-preview error:", err));
     }
   }, [resultBlob]);
+
+  useEffect(() => {
+    const handleMouseUp = () => {
+      const selection = window.getSelection();
+      const text = selection.toString().trim();
+      
+      if (text && previewRef.current && previewRef.current.contains(selection.anchorNode)) {
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        
+        let node = selection.anchorNode;
+        while (node && node.nodeName !== 'P' && node.nodeName !== 'DIV' && node.nodeName !== 'TD') {
+          node = node.parentNode;
+        }
+        const paragraphText = node ? node.innerText || node.textContent : text;
+        
+        setSelectionData({
+          text,
+          paragraphText: paragraphText.trim(),
+          top: rect.top - 40,
+          left: rect.left + rect.width / 2 - 50
+        });
+      } else {
+        if (!isEditModalOpen) {
+          setSelectionData(null);
+        }
+      }
+    };
+
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => document.removeEventListener('mouseup', handleMouseUp);
+  }, [isEditModalOpen]);
+
+  const handleEditDocument = async () => {
+    if (!selectionData || !editPrompt || !resultBlob) return;
+    
+    setIsEditingDocument(true);
+    const formData = new FormData();
+    formData.append('file', resultBlob, 'document.docx');
+    formData.append('selected_text', selectionData.text);
+    formData.append('paragraph_text', selectionData.paragraphText);
+    formData.append('prompt', editPrompt);
+
+    try {
+      const response = await axios.post('http://localhost:8000/api/edit-document', formData, {
+        responseType: 'blob'
+      });
+      
+      const blob = new Blob([response.data], { 
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+      });
+      const url = window.URL.createObjectURL(blob);
+      setResultBlob(blob);
+      setResultBlobUrl(url);
+      
+      setIsEditModalOpen(false);
+      setSelectionData(null);
+      setEditPrompt('');
+    } catch (err) {
+      console.error(err);
+      alert('Đã xảy ra lỗi khi sửa văn bản bằng AI. Vui lòng thử lại.');
+    } finally {
+      setIsEditingDocument(false);
+    }
+  };
 
   const handleFileChange = (e) => {
     const selected = e.target.files[0];
@@ -323,6 +397,43 @@ function LessonPlanTool() {
           </div>
         )}
       </div>
+
+      {selectionData && !isEditModalOpen && (
+        <div 
+          className="ai-floating-btn"
+          style={{ top: selectionData.top, left: selectionData.left }}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsEditModalOpen(true);
+          }}
+        >
+          <Sparkles size={14} /> Sửa bằng AI
+        </div>
+      )}
+
+      {isEditModalOpen && (
+        <div className="ai-edit-modal-overlay" onClick={() => setIsEditModalOpen(false)}>
+          <div className="ai-edit-modal" onClick={e => e.stopPropagation()}>
+            <h3><Sparkles size={20} color="var(--primary-color)" /> Sửa văn bản bằng AI</h3>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+              Đang sửa: <strong>"{selectionData?.text.length > 35 ? selectionData?.text.substring(0, 35) + '...' : selectionData?.text}"</strong>
+            </p>
+            <textarea 
+              placeholder="Nhập yêu cầu sửa đổi (VD: Viết lại đoạn này chuyên nghiệp hơn, rút gọn lại...)"
+              value={editPrompt}
+              onChange={e => setEditPrompt(e.target.value)}
+              autoFocus
+            />
+            <div className="modal-actions">
+              <button className="btn-outline" onClick={() => setIsEditModalOpen(false)} disabled={isEditingDocument}>Hủy</button>
+              <button className="btn-primary" onClick={handleEditDocument} disabled={isEditingDocument || !editPrompt.trim()}>
+                {isEditingDocument ? <><Loader2 size={16} className="loader"/> Đang xử lý...</> : 'Thực hiện'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
@@ -347,6 +458,7 @@ function AppLayout({ isDark, setIsDark }) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const accountMenuRef = useRef(null);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -418,9 +530,9 @@ function AppLayout({ isDark, setIsDark }) {
                 <span>Learn more</span>
               </div>
               <div className="menu-divider"></div>
-              <div className="menu-item text-danger">
+              <div className="menu-item text-danger" onClick={logout}>
                 <LogOut size={18} />
-                <span>Log out</span>
+                <span>Đăng xuất</span>
               </div>
             </div>
           )}
@@ -430,9 +542,13 @@ function AppLayout({ isDark, setIsDark }) {
             onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
             style={{ display: isSidebarCollapsed ? 'none' : 'flex' }}
           >
-            <div className="user-avatar">C</div>
+            {user?.picture ? (
+              <img src={user.picture} alt="Avatar" className="user-avatar" style={{ border: 'none', padding: 0 }} />
+            ) : (
+              <div className="user-avatar">{user?.name ? user.name.charAt(0).toUpperCase() : 'U'}</div>
+            )}
             <div className="user-info">
-              <span className="user-name">Canh</span>
+              <span className="user-name">{user?.name || 'User'}</span>
               <span className="user-plan">Free plan</span>
             </div>
           </div>
@@ -526,12 +642,19 @@ function App() {
 
       <Routes location={displayLocation}>
         <Route path="/" element={<LandingPage isDark={isDark} setIsDark={setIsDark} />} />
-        <Route element={<AppLayout isDark={isDark} setIsDark={setIsDark} />}>
-          <Route path="/lesson-plan" element={<LessonPlanTool />} />
-          <Route path="/exam" element={<ComingSoon title="Tạo đề thi" icon={FileText} />} />
-          <Route path="/slide" element={<ComingSoon title="Tạo slide bài giảng" icon={Presentation} />} />
-          <Route path="/worksheet" element={<ComingSoon title="Tạo phiếu bài tập" icon={ClipboardList} />} />
-          <Route path="/simulation" element={<ComingSoon title="Tạo mô phỏng bài học" icon={PlayCircle} />} />
+        <Route path="/signin" element={<LoginPage mode="login" />} />
+        <Route path="/register" element={<LoginPage mode="register" />} />
+        <Route path="/login" element={<Navigate to="/signin" replace />} />
+        
+        {/* Protected Routes */}
+        <Route element={<PrivateRoute />}>
+          <Route element={<AppLayout isDark={isDark} setIsDark={setIsDark} />}>
+            <Route path="/lesson-plan" element={<LessonPlanTool />} />
+            <Route path="/exam" element={<ComingSoon title="Tạo đề thi" icon={FileText} />} />
+            <Route path="/slide" element={<ComingSoon title="Tạo slide bài giảng" icon={Presentation} />} />
+            <Route path="/worksheet" element={<ComingSoon title="Tạo phiếu bài tập" icon={ClipboardList} />} />
+            <Route path="/simulation" element={<ComingSoon title="Tạo mô phỏng bài học" icon={PlayCircle} />} />
+          </Route>
         </Route>
       </Routes>
     </>

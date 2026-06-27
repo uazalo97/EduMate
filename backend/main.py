@@ -3,16 +3,31 @@ import os
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from pydantic import BaseModel
 from dotenv import load_dotenv
 import logging
+
+class GoogleAuthRequest(BaseModel):
+    credential: str
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
-from services.document_service import process_template_nodes, apply_node_replacements
+from services.document_service import process_template_nodes, apply_node_replacements, edit_document_text_via_ai
 from services.ai_service import generate_lesson_plan_nodes
+from services.auth_service import verify_google_token, create_access_token
+from services.user_service import create_user, get_user_by_email, verify_password
 
 load_dotenv()
+
+class RegisterRequest(BaseModel):
+    email: str
+    password: str
+    name: str
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
 
 app = FastAPI(title="Lesson Plan Generator API")
 
@@ -101,3 +116,79 @@ async def generate_lesson_plan_api(
     except Exception as e:
         logger.error(f"[main] Error during generation: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/edit-document")
+async def edit_document_api(
+    file: UploadFile = File(...),
+    selected_text: str = Form(...),
+    paragraph_text: str = Form(...),
+    prompt: str = Form(...)
+):
+    """
+    Endpoint to handle inline text editing.
+    """
+    try:
+        temp_dir = "temp"
+        os.makedirs(temp_dir, exist_ok=True)
+        file_path = os.path.join(temp_dir, f"edit_{file.filename}")
+        
+        with open(file_path, "wb") as buffer:
+            buffer.write(await file.read())
+            
+        logger.info(f"[main] Nhận yêu cầu sửa văn bản cho file: {file_path}")
+        
+        edit_document_text_via_ai(file_path, selected_text, paragraph_text, prompt)
+        
+        return FileResponse(
+            path=file_path,
+            filename=file.filename,
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+    except Exception as e:
+        logger.error(f"[main] Error during edit document: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/auth/google")
+async def auth_google(request: GoogleAuthRequest):
+    """
+    Nhận credential từ Frontend, xác thực với Google và trả về JWT + User Info
+    """
+    user_info = verify_google_token(request.credential)
+    
+    # Sinh JWT token cho phiên làm việc
+    access_token = create_access_token(data={"sub": user_info["sub"], "email": user_info["email"]})
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": user_info
+    }
+
+@app.post("/api/auth/register")
+async def register(request: RegisterRequest):
+    success = create_user(request.email, request.password, request.name)
+    if not success:
+        raise HTTPException(status_code=400, detail="Email này đã được đăng ký.")
+    return {"message": "Đăng ký thành công"}
+
+@app.post("/api/auth/login")
+async def login(request: LoginRequest):
+    user = get_user_by_email(request.email)
+    if not user:
+        raise HTTPException(status_code=401, detail="Email hoặc mật khẩu không chính xác.")
+    
+    if not verify_password(request.password, user["hashed_password"]):
+        raise HTTPException(status_code=401, detail="Email hoặc mật khẩu không chính xác.")
+    
+    user_info = {
+        "email": user["email"],
+        "name": user["name"],
+        "picture": ""
+    }
+    access_token = create_access_token(data={"sub": user["email"], "email": user["email"]})
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": user_info
+    }

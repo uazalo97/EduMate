@@ -6,3 +6,4 @@ mammoth
 openai
 pydantic
 python-dotenv
+passlib[bcrypt]
