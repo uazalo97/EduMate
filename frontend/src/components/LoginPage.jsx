@@ -39,7 +39,7 @@ export default function LoginPage({ mode = 'login' }) {
     setIsProcessing(true);
     setError('');
     try {
-      const res = await axios.post('http://localhost:8000/api/auth/google', {
+      const res = await axios.post('/api/auth/google', {
         credential: credentialResponse.credential
       });
       const { access_token, user } = res.data;
@@ -65,7 +65,7 @@ export default function LoginPage({ mode = 'login' }) {
 
     try {
       if (activeTab === 'login') {
-        const res = await axios.post('http://localhost:8000/api/auth/login', {
+        const res = await axios.post('/api/auth/login', {
           email,
           password
         });
@@ -73,7 +73,7 @@ export default function LoginPage({ mode = 'login' }) {
         login(user, access_token);
         navigate('/lesson-plan');
       } else {
-        await axios.post('http://localhost:8000/api/auth/register', {
+        await axios.post('/api/auth/register', {
           email,
           password,
           name

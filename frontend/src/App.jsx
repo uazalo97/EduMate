@@ -173,7 +173,7 @@ function LessonPlanTool() {
     formData.append('prompt', editPrompt);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/edit-document', formData, {
+      const response = await axios.post('/api/edit-document', formData, {
         responseType: 'blob'
       });
       
@@ -231,7 +231,7 @@ function LessonPlanTool() {
     formData.append('so_tiet', soTiet);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/generate', formData, {
+      const response = await axios.post('/api/generate', formData, {
         responseType: 'blob'
       });
       
