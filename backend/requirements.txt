@@ -10,3 +10,5 @@ passlib[bcrypt]
 google-auth
 requests
 PyJWT
+sqlalchemy
+psycopg2-binary

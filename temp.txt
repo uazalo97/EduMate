@@ -1,0 +1,5 @@
+KẾ HOẠCH BÀI DẠY
+
+TÊN BÀI DẠY: {{ ten_bai_day }}
+Môn học/Hoạt động giáo dục: {{ mon_hoc }}; Lớp: {{ lop }}
+Thời gian thực hiện: {{ so_tiet }} tiết

@@ -133,7 +133,7 @@ def edit_document_text_via_ai(docx_path: str, selected_text: str, paragraph_text
         for p in paragraphs:
             if p.text.strip():
                 p_clean = "".join(p.text.split())
-                if sel_clean in p_clean:
+                if para_clean in p_clean or p_clean in para_clean:
                     candidates.append(p)
                     
     extract_candidates(doc.paragraphs)
@@ -143,16 +143,12 @@ def edit_document_text_via_ai(docx_path: str, selected_text: str, paragraph_text
                 extract_candidates(cell.paragraphs)
                 
     target_p = None
-    if len(candidates) == 1:
-        target_p = candidates[0]
-    elif len(candidates) > 1:
-        # Nếu có nhiều, chọn cái khớp paragraph_text nhất
+    if len(candidates) >= 1:
         for p in candidates:
             p_clean = "".join(p.text.split())
-            if p_clean == para_clean or p_clean in para_clean or para_clean in p_clean:
+            if p_clean == para_clean:
                 target_p = p
                 break
-        # Nếu vẫn không tìm được, lấy cái đầu tiên
         if not target_p:
             target_p = candidates[0]
             
@@ -161,11 +157,88 @@ def edit_document_text_via_ai(docx_path: str, selected_text: str, paragraph_text
         new_text = edit_paragraph_content(target_p.text, selected_text, prompt)
         bold = target_p.runs[0].bold if target_p.runs else None
         target_p.clear()
-        run = target_p.add_run(new_text)
+        
+        run = target_p.add_run()
         if bold:
             run.bold = True
+            
+        lines = new_text.split('\n')
+        for i, line in enumerate(lines):
+            tab_parts = line.split('\t')
+            for j, t_part in enumerate(tab_parts):
+                run.add_text(t_part)
+                if j < len(tab_parts) - 1:
+                    run.add_tab()
+            if i < len(lines) - 1:
+                run.add_break()
+                
         doc.save(docx_path)
         logger.info(f"[document_service] Đã lưu file sau khi sửa: {docx_path}")
     else:
         logger.warning("[document_service] Không tìm thấy đoạn văn khớp với nội dung đã bôi đen.")
         raise Exception("Không tìm thấy đoạn văn tương ứng trong file Word.")
+
+def edit_document_text_manual(docx_path: str, paragraph_text: str, new_paragraph_text: str) -> None:
+    """
+    Duyệt file Word, tìm đoạn văn có nội dung khớp với paragraph_text,
+    và ghi đè bằng new_paragraph_text (sửa thủ công).
+    """
+    logger.info(f"[document_service] Tìm và sửa đoạn văn (thủ công). File: {docx_path}")
+    doc = Document(docx_path)
+    
+    para_clean = "".join(paragraph_text.split())
+    
+    if not para_clean:
+        raise Exception("Nội dung đoạn văn gốc trống.")
+        
+    candidates = []
+    
+    def extract_candidates(paragraphs):
+        for p in paragraphs:
+            if p.text.strip():
+                p_clean = "".join(p.text.split())
+                if para_clean in p_clean or p_clean in para_clean:
+                    candidates.append(p)
+                    
+    extract_candidates(doc.paragraphs)
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                extract_candidates(cell.paragraphs)
+                
+    target_p = None
+    if len(candidates) >= 1:
+        # Lấy cái khớp nhất hoặc cái đầu tiên
+        for p in candidates:
+            p_clean = "".join(p.text.split())
+            if p_clean == para_clean:
+                target_p = p
+                break
+        if not target_p:
+            target_p = candidates[0]
+            
+    if target_p:
+        logger.info("[document_service] Đã tìm thấy đoạn văn cần sửa thủ công.")
+        bold = target_p.runs[0].bold if target_p.runs else None
+        target_p.clear()
+        
+        run = target_p.add_run()
+        if bold:
+            run.bold = True
+            
+        # Parse newlines and tabs
+        lines = new_paragraph_text.split('\n')
+        for i, line in enumerate(lines):
+            tab_parts = line.split('\t')
+            for j, t_part in enumerate(tab_parts):
+                run.add_text(t_part)
+                if j < len(tab_parts) - 1:
+                    run.add_tab()
+            if i < len(lines) - 1:
+                run.add_break()
+                
+        doc.save(docx_path)
+        logger.info(f"[document_service] Đã lưu file sau khi sửa thủ công: {docx_path}")
+    else:
+        logger.warning("[document_service] Không tìm thấy đoạn văn gốc để sửa thủ công.")
+        raise Exception("Không tìm thấy đoạn văn tương ứng trong file Word để sửa.")

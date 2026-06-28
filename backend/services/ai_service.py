@@ -29,14 +29,13 @@ def generate_lesson_plan_nodes(prompt: str, document_elements: dict, meta_data: 
     NHIỆM VỤ CỦA BẠN GỒM 2 PHẦN KHÔNG THỂ TÁCH RỜI:
     
     PHẦN 1: SOẠN NỘI DUNG GIÁO ÁN (QUAN TRỌNG NHẤT)
-    - Dựa vào YÊU CẦU BÀI HỌC của người dùng, bạn PHẢI tự tư duy và soạn thảo toàn bộ nội dung giáo án một cách chi tiết, xuất sắc.
+    - Các thông tin hành chính (Tên bài dạy, Trường, Lớp, Môn học, Thời lượng) ĐÃ ĐƯỢC HỆ THỐNG TỰ ĐỘNG ĐIỀN VÀO TRƯỚC ĐÓ. Bạn KHÔNG ĐƯỢC sinh lại các thông tin này để tránh trùng lặp.
+    - Dựa vào YÊU CẦU BÀI HỌC của người dùng, bạn PHẢI tự tư duy và soạn thảo TOÀN BỘ nội dung chuyên môn của giáo án (Mục tiêu, Thiết bị, Tiến trình, Hoạt động 1, 2, 3...) một cách chi tiết, xuất sắc.
     - Bạn hãy tìm tất cả các đoạn văn có chứa thẻ biến (như {{{{ kien_thuc }}}}, {{{{ hd1_muc_tieu }}}}, {{{{ hd2_noi_dung }}}}...) hoặc các câu hướng dẫn (như "Nêu cụ thể...").
-    - BẠN BẮT BUỘC PHẢI THAY THẾ TOÀN BỘ các thẻ này bằng nội dung bài giảng thực tế do bạn soạn ra. TUYỆT ĐỐI KHÔNG ĐƯỢC BỎ QUA BẤT KỲ THẺ NÀO.
+    - BẠN BẮT BUỘC PHẢI THAY THẾ TOÀN BỘ các thẻ này bằng nội dung bài giảng thực tế do bạn soạn ra.
     
-    PHẦN 2: ĐIỀN THÔNG TIN HÀNH CHÍNH
-    - Người dùng có cung cấp sẵn các thông tin hành chính sau:
-      {json.dumps(meta_data, ensure_ascii=False)}
-    - Hãy tìm các đoạn văn chứa thẻ như {{{{ ten_truong }}}}, {{{{ ten_bai_day }}}}... và thay thế bằng dữ liệu tương ứng ở trên.
+    PHẦN 2: BẢO TOÀN CẤU TRÚC
+    - TUYỆT ĐỐI KHÔNG ĐƯỢC sửa đổi hoặc tự ý ghi đè lên các nhãn tĩnh không mang tính chuyên môn (ví dụ: "Thời gian thực hiện:", "Họ và tên giáo viên:"). Chỉ trả về các Key của những đoạn văn thực sự cần thay đổi nội dung chuyên môn.
 
     PHẦN 3: XỬ LÝ CÔNG THỨC TOÁN HỌC VÀ HÓA HỌC
     - TUYỆT ĐỐI KHÔNG sử dụng cú pháp mã hóa LaTeX (như \\frac{{1}}{{2}}, x^2, \sqrt{{x}}) vì hệ thống xuất file Word chưa hỗ trợ dịch mã LaTeX.
@@ -50,27 +49,37 @@ def generate_lesson_plan_nodes(prompt: str, document_elements: dict, meta_data: 
     ĐỊNH DẠNG ĐẦU RA BẮT BUỘC (JSON):
     - Key: Là mã ID của đoạn văn (ví dụ: "p_1", "t_0_1_2").
     - Value: Là nội dung text MỚI mà bạn muốn đè lên đoạn văn đó.
-    - Bạn phải trả về một JSON chứa ÍT NHẤT 20-30 keys, bao gồm cả phần hành chính VÀ TOÀN BỘ phần nội dung giáo án (Hoạt động 1, 2, 3, 4...).
     
-    Ví dụ:
+    Ví dụ (ĐÂY CHỈ LÀ VÍ DỤ MINH HỌA CẤU TRÚC JSON TRẢ VỀ):
     {{
-      "p_4": "TÊN BÀI DẠY: Lực ma sát",
-      "p_8": "1. Kiến thức: Học sinh phát biểu được định luật...",
-      "p_15": "- Mục tiêu: Tạo hứng thú cho học sinh vào bài mới..."
+      "p_8": "1. Kiến thức: [Mục tiêu kiến thức tương ứng với bài học]...",
+      "p_15": "- Mục tiêu: [Mục tiêu hoạt động tương ứng với bài học]...",
+      "p_18": "- Nội dung: [Nội dung chi tiết của hoạt động]..."
     }}
     
-    --- DANH SÁCH CÁC ĐOẠN VĂN GỐC TỪ FILE WORD ---
+    --- DANH SÁCH CÁC ĐOẠN VĂN GỐC (ĐÃ LỌC BỎ THÔNG TIN HÀNH CHÍNH) TỪ FILE WORD ---
     {elements_json}
     """
     
-    logger.info(f"[ai_service] Chuẩn bị gửi yêu cầu tới LLM (gpt-4o). Chủ đề: {prompt}")
+    enriched_prompt = f"""
+Thông tin cơ bản về bài học:
+- Tên bài dạy: {meta_data.get('ten_bai_day', 'Không xác định')}
+- Môn học: {meta_data.get('mon_hoc', 'Không xác định')}
+- Lớp: {meta_data.get('lop', 'Không xác định')}
+- Thời lượng: {meta_data.get('so_tiet', 'Không xác định')}
+
+Yêu cầu chi tiết từ người dùng:
+{prompt}
+"""
+    
+    logger.info(f"[ai_service] Chuẩn bị gửi yêu cầu tới LLM (gpt-4o). Tên bài dạy: {meta_data.get('ten_bai_day')}")
     
     try:
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": prompt}
+                {"role": "user", "content": enriched_prompt}
             ],
             response_format={"type": "json_object"},
             temperature=0.7,

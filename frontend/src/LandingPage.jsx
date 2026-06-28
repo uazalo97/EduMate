@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Sparkles, ChevronDown, BookOpen, FileText, Presentation, PlayCircle, Video, Book, HelpCircle, Users, Sun, Moon, MessageCircle } from 'lucide-react';
+import { useAuth } from './contexts/AuthContext';
 import './landing-page.css';
 
 function LandingPage({ isDark, setIsDark }) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,10 +73,18 @@ function LandingPage({ isDark, setIsDark }) {
         </nav>
         
         <div className="landing-actions">
-          <a href="#" className="btn-login">Đăng nhập</a>
-          <NavLink to="/lesson-plan" className="btn-trial">
-            Trải nghiệm miễn phí
-          </NavLink>
+          {user ? (
+            <NavLink to="/lesson-plan" className="btn-trial" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <BookOpen size={18} /> Truy cập Ứng dụng
+            </NavLink>
+          ) : (
+            <>
+              <NavLink to="/signin" className="btn-login">Đăng nhập</NavLink>
+              <NavLink to="/signin" className="btn-trial">
+                Trải nghiệm miễn phí
+              </NavLink>
+            </>
+          )}
         </div>
       </header>
 
@@ -94,8 +104,8 @@ function LandingPage({ isDark, setIsDark }) {
         </p>
         
         <div className="hero-actions">
-          <NavLink to="/lesson-plan" className="btn-hero-primary">
-            Bắt đầu miễn phí ngay
+          <NavLink to={user ? "/lesson-plan" : "/signin"} className="btn-hero-primary">
+            {user ? "Bắt đầu thiết kế giáo án" : "Bắt đầu miễn phí ngay"}
           </NavLink>
           <a href="#features" className="btn-hero-secondary">
             Tìm hiểu thêm
