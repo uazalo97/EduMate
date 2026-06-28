@@ -32,8 +32,6 @@
   right: 0;
   bottom: 0;
   background: var(--header-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-color);
   z-index: -1;
 }
@@ -96,9 +94,7 @@
 }
 
 .glass-dropdown {
-  background: var(--dropdown-bg);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
+  background: var(--surface-color);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);

@@ -14,8 +14,8 @@
   --dot-color: rgba(0, 0, 0, 0.08);
   --input-bg: #f4f5f7;
   --input-focus-bg: #ffffff;
-  --header-bg: rgba(255, 255, 255, 0.85);
-  --dropdown-bg: rgba(255, 255, 255, 0.8);
+  --header-bg: #ffffff;
+  --dropdown-bg: #ffffff;
   --placeholder-color: #9ca3af;
   
   --success-color: #10b981;
@@ -47,8 +47,8 @@
   --dot-color: rgba(255, 255, 255, 0.08);
   --input-bg: rgba(255, 255, 255, 0.05);
   --input-focus-bg: rgba(255, 255, 255, 0.1);
-  --header-bg: rgba(26, 26, 26, 0.85);
-  --dropdown-bg: rgba(26, 26, 26, 0.8);
+  --header-bg: #1a1a1a;
+  --dropdown-bg: #1a1a1a;
   --placeholder-color: #6b7280;
   
   --shadow-sm: 0 1px 3px rgba(193,95,60,0.2);
@@ -67,8 +67,6 @@ html {
   width: 100vw;
   height: 100vh;
   background: var(--header-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   z-index: 99999;
   display: flex;
   align-items: center;
@@ -328,8 +326,6 @@ body {
   padding: 0.75rem 1.5rem 0.5rem 1.5rem;
   margin-bottom: 0;
   background: var(--header-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -464,8 +460,6 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
   left: 0;
   width: 100%;
   background: var(--dropdown-bg);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
@@ -604,12 +598,11 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 .ai-edit-modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10000;
-  backdrop-filter: blur(4px);
 }
 
 .ai-edit-modal {
@@ -781,8 +774,6 @@ input[type="radio"] {
   left: 0;
   width: 250px;
   background: var(--dropdown-bg);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   padding: 0.5rem 0;
