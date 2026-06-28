@@ -224,12 +224,12 @@ function TemplateSelection({ onSelectTemplate }) {
         : [];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100%', background: '#f8f9fa' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100%', background: 'var(--bg-color)' }}>
       {/* Full-width Header */}
-      <div style={{ padding: '1rem 3rem', borderBottom: '1px solid var(--border-color)', background: '#fff' }}>
+      <div style={{ padding: '1rem 3rem', borderBottom: '1px solid var(--border-color)', background: 'var(--surface-color)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-color)', marginBottom: '0.25rem', marginTop: 0 }}>Chọn mẫu giáo án</h1>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.25rem', marginTop: 0 }}>Chọn mẫu giáo án</h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>Chọn một mẫu để xem trước, sau đó vào workspace tạo giáo án.</p>
           </div>
           <div style={{ display: 'flex', gap: '1rem' }}>
@@ -249,8 +249,8 @@ function TemplateSelection({ onSelectTemplate }) {
               key={tab}
               onClick={() => setActiveTab(tab)}
               style={{ 
-                background: activeTab === tab ? '#f0f0f0' : 'transparent',
-                border: activeTab === tab ? '1px solid #e0e0e0' : '1px solid transparent',
+                background: activeTab === tab ? 'var(--input-bg)' : 'transparent',
+                border: activeTab === tab ? '1px solid var(--border-color)' : '1px solid transparent',
                 color: activeTab === tab ? 'var(--primary-color)' : 'var(--text-secondary)',
                 padding: '0.4rem 1rem',
                 borderRadius: '20px',
@@ -294,8 +294,8 @@ function TemplateSelection({ onSelectTemplate }) {
                 Tải lên giáo án mẫu DOCX của trường để giữ layout và bảng biểu riêng.
               </p>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <span style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem', background: '#f1f5f9', color: '#475569', borderRadius: '4px', fontWeight: 600 }}>DOCX</span>
-                <span style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem', background: '#f1f5f9', color: '#475569', borderRadius: '4px', fontWeight: 600 }}>Cá nhân</span>
+                <span style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem', background: 'var(--input-bg)', color: 'var(--text-secondary)', borderRadius: '4px', fontWeight: 600 }}>DOCX</span>
+                <span style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem', background: 'var(--input-bg)', color: 'var(--text-secondary)', borderRadius: '4px', fontWeight: 600 }}>Cá nhân</span>
               </div>
               <input 
                 type="file" 
